@@ -32,8 +32,8 @@ Function Set-WinVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
 }
 
 
-#Function for setting Ubuntu IP Address
-Function Set-UBVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
+#Function for setting Linux IP Address
+Function Set-LXVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
  $ifconfig = "sudo ifconfig $ADAPTER $IP $SNM $GW"
  Write-Host "Setting IP address for $VM..."
  Invoke-VMScript -VM $VM -GuestCredential $GC -ScriptType bat -ScriptText $ifconfig
@@ -50,16 +50,16 @@ Function PowerOn ($VM)
 $HostCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter vSphere credentials", "", "")
 
 #Get Windows 7 Credentials. Could hardcore these, but I try not to store passwords
-$WIN7GuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Windows admin credentials:", "admin", "")
+$WINGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Windows admin credentials:", "admin", "")
 
 #Get the name of the Adapter we want to set on all VMs
-$WIN7Adapter = Read-Host -Prompt 'Input your Windows Network Adapter Name (ex. Local Area Connection 4)'
+$WINAdapter = Read-Host -Prompt 'Input your Windows Network Adapter Name (ex. Local Area Connection 4)'
 
 #Get Ubuntu Credentials. Could hardcode these, but again I try not to store passwords
-$UBGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Ubuntu root credentials:", "root", "")
+$LXGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Ubuntu root credentials:", "root", "")
 
 #Get the name of the Adapter we want to set on all VMs
-$UBAdapter = Read-Host -Prompt 'Input your Ubuntu Network Adapter Name (ex. eth0)'
+$LXAdapter = Read-Host -Prompt 'Input your Ubuntu Network Adapter Name (ex. eth0)'
 
 
 #Connect to vSphere
@@ -71,6 +71,20 @@ Foreach($folder in $folders) {
 #create a counter for IP suffix. This way we can dynamically set IPs and don't overlap them
 $ip_counter = 1
 
+#Set Windows Server IPs
+#----------------------#
+
+#Get all WS VMS
+$WSVMS = Get-Folder $folder | Get-VM '*WS*'
+
+Foreach ($VM IN $WSVMS) {
+$ip_counter++
+$IP = $IP_PREFIX+$ip_counter
+Set-WinVMIP $VM $HostCred $WINGuestCred $IP $SNM $GW $WINAdapter
+
+}
+#---------------------#
+
 #Set Windows 7 IPs
 #----------------------#
 
@@ -80,14 +94,41 @@ $WIN7VMS = Get-Folder $folder | Get-VM '*W7*'
 Foreach ($VM IN $WIN7VMS) {
 $ip_counter++
 $IP = $IP_PREFIX+$ip_counter
-Set-WinVMIP $VM $HostCred $WIN7GuestCred $IP $SNM $GW $WIN7Adapter
+Set-WinVMIP $VM $HostCred $WINGuestCred $IP $SNM $GW $WINAdapter
 
 }
 #---------------------#
 
+#Set File Server IPs
+#----------------------#
+
+#Get all FS VMS
+$FSVMS = Get-Folder $folder | Get-VM '*FS*'
+
+Foreach ($VM IN $FSVMS) {
+$ip_counter++
+$IP = $IP_PREFIX+$ip_counter
+Set-WinVMIP $VM $HostCred $WINGuestCred $IP $SNM $GW $WINAdapter
+
+}
+#---------------------#
+
+#Set Ubuntu Server IPs
+#---------------------#
+
+#Get all UB VMS
+$USVMS = Get-Folder $folder | Get-VM '*US*'
+
+#Set IPs in all UB VMs
+Foreach ($VM IN $USVMS) {
+$ip_counter++
+$IP = $IP_PREFIX+$ip_counter
+Set-LXVMIP $VM $HostCred $LXGuestCred $IP $SNM $GW $LXAdapter
+#---------------------#
+}
 
 
-#Set UB IPs
+#Set Ubuntu Desktop IPs
 #---------------------#
 
 #Get all UB VMS
@@ -97,7 +138,22 @@ $UBVMS = Get-Folder $folder | Get-VM '*UB*'
 Foreach ($VM IN $UBVMS) {
 $ip_counter++
 $IP = $IP_PREFIX+$ip_counter
-Set-UBVMIP $VM $HostCred $UBGuestCred $IP $SNM $GW $UBAdapter
+Set-LXVMIP $VM $HostCred $LXGuestCred $IP $SNM $GW $LXAdapter
 #---------------------#
 }
+
+#Set Kali IPs
+#---------------------#
+
+#Get all KA VMS
+$KAVMS = Get-Folder $folder | Get-VM '*KA*'
+
+#Set IPs in all UB VMs
+Foreach ($VM IN $KAVMS) {
+$ip_counter++
+$IP = $IP_PREFIX+$ip_counter
+Set-LXVMIP $VM $HostCred $LXGuestCred $IP $SNM $GW $LXAdapter
+#---------------------#
+}
+
 }
