@@ -1,9 +1,4 @@
-#vsphere_automation Project definition
-
-Overall, this project will be a collection of scripts I write for automating the setup of VMs in a vSphere cluster
-
-
-
+This project will be a collection of scripts I write for automating the setup of VMs in a vSphere cluster
 
 # set_ips.ps1 script
 
@@ -43,12 +38,14 @@ FS - Windows Server 2012
 
 ## Other Inputs
 
-This script will ask for a few different inputs. You'll need to know the Adapter name of the Host VM. 
+This script will ask for a few different inputs. You'll need to input the Adapter name of the Host VM. 
 
-###Linux
+###Linux Adapter
 
 This is eth0 by default. 
 
-###Windows
+###Windows Adapter
 
-This is Local Area Connection by default. 
+This is Local Area Connection by default.
+
+ 
