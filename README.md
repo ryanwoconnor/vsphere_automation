@@ -26,14 +26,15 @@ This script will look for VMs that follow a specific naming convention and set t
 
 Linux VMs that match these naming conventions will use function Set-LXVMIP
 
-KA - Kali Linux
-UB - Ubuntu Desktop
-US - Ubuntu Server
+* **KA** - Kali Linux
+* **UB** - Ubuntu Desktop
+* **US** - Ubuntu Server
 
 Windows VMs that match these naming conventions will use function WinVMIP
-WS - Windows Server 2012
-W7 - Windows 7
-FS - Windows Server 2012
+
+* **WS** - Windows Server 2012
+* **W7** - Windows 7
+* **FS** - Windows Server 2012
 
 
 ## Other Inputs
