@@ -4,7 +4,7 @@ This project will be a collection of scripts I write for automating the setup of
 
 This script will allow you to set IP Addresses for a large number of VMs using powerclicore. It was written for a specific project I had but could be extended to suit your needs. 
 
-###Script expects a few variables:
+### Script expects a few variables:
 
 $folders - This folders variable is a comma separated list of folders in vSphere. This is used to create an array of folders to search for VMs that need their IP set
 
@@ -40,11 +40,11 @@ FS - Windows Server 2012
 
 This script will ask for a few different inputs. You'll need to input the Adapter name of the Host VM. 
 
-###Linux Adapter
+### Linux Adapter
 
 This is eth0 by default. 
 
-###Windows Adapter
+### Windows Adapter
 
 This is Local Area Connection by default.
 
