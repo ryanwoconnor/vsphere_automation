@@ -23,7 +23,7 @@ $vsphere_url = ""
 #*************************#
 #-------------------------#
 
-#Function for setting Windows 7 IP Address
+#Function for setting Windows IP Address
 Function Set-WinVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
  $netsh = "c:\windows\system32\netsh.exe interface ip set address name=`"$ADAPTER`" static $IP $SNM $GW"
  Write-Host "Setting IP address for $VM..."
