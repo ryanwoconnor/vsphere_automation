@@ -34,9 +34,10 @@ Function Set-WinVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
 
 #Function for setting Linux IP Address
 Function Set-LXVMIP ($VM, $HC, $GC, $IP, $SNM, $GW, $ADAPTER){
- $ifconfig = "sudo ifconfig $ADAPTER $IP $SNM $GW"
+ $ifconfig = "sudo ifconfig $ADAPTER $IP netmask $SNM"
+ Write-Host $ifconfig
  Write-Host "Setting IP address for $VM..."
- Invoke-VMScript -VM $VM -GuestCredential $GC -ScriptType bat -ScriptText $ifconfig
+ Invoke-VMScript -VM $VM -GuestCredential $GC -ScriptText $ifconfig -ScriptType Bash
  Write-Host "Setting IP address completed."
 }
 
@@ -56,7 +57,7 @@ $WINGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter 
 $WINAdapter = Read-Host -Prompt 'Input your Windows Network Adapter Name (ex. Local Area Connection 4)'
 
 #Get Ubuntu Credentials. Could hardcode these, but again I try not to store passwords
-$LXGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Ubuntu root credentials:", "root", "")
+$LXGuestCred = $Host.UI.PromptForCredential("Please enter credentials", "Enter Ubuntu user credentials:", "user", "")
 
 #Get the name of the Adapter we want to set on all VMs
 $LXAdapter = Read-Host -Prompt 'Input your Ubuntu Network Adapter Name (ex. eth0)'
